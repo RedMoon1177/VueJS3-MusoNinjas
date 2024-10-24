@@ -12,7 +12,8 @@
     <input type="file" @change="handleChange" />
     <div class="error">{{ fileError }}</div>
     <div class="error"></div>
-    <button>Create</button>
+    <button v-if="!isPending">Create</button>
+    <button v-else disabled>Saving...</button>
   </form>
 </template>
 
@@ -33,10 +34,12 @@ export default {
     const description = ref("");
     const file = ref(null);
     const fileError = ref(null);
+    const isPending = ref(false);
 
     const handleSubmit = async () => {
       if (file.value) {
         // start
+        isPending.value = true;
         await uploadImage(file.value);
         await addDocument({
           title: title.value,
@@ -49,6 +52,7 @@ export default {
           createdAt: timestamp(),
         });
         // end
+        isPending.value = false;
         if (!error.value) {
           console.log("playlist added");
         }
@@ -68,7 +72,14 @@ export default {
         fileError.value = "Please select an image file (png or jpeg)";
       }
     };
-    return { title, description, handleSubmit, handleChange, fileError };
+    return {
+      title,
+      description,
+      handleSubmit,
+      handleChange,
+      fileError,
+      isPending,
+    };
   },
 };
 </script>
