@@ -5,6 +5,7 @@ import {
   ref as storageRef,
   uploadBytes,
   getDownloadURL,
+  deleteObject,
 } from "firebase/storage"; // Correct imports from Firebase v9
 
 const { user } = getUser();
@@ -31,7 +32,19 @@ const useStorage = () => {
     }
   };
 
-  return { url, filePath, error, uploadImage };
+  const deleteImage = async (path) => {
+    const storageReference = storageRef(projectStorage, path);
+
+    try {
+      await deleteObject(storageReference);
+      console.log("Image deleted successfully");
+    } catch (err) {
+      console.log(err.message);
+      error.value = err.message;
+    }
+  };
+
+  return { url, filePath, error, uploadImage, deleteImage };
 };
 
 export default useStorage;
