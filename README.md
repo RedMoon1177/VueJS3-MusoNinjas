@@ -18,6 +18,8 @@ To publish the rules, run the following command:
 
 firebase deploy --only firestore:rules
 
+**Firestore Querries**: https://firebase.google.com/docs/firestore/query-data/queries
+
 **Storage rules**
 you need to publish your storage.rules as well, just like the Firestore rules.
 Firebase Storage security rules do not automatically apply when you edit them locally;

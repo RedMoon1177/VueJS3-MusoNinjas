@@ -1,16 +1,31 @@
 import { ref, watchEffect } from "vue";
 import { projectFirestore } from "../firebase/config";
-import { collection, onSnapshot, query, orderBy } from "firebase/firestore";
+import {
+  collection,
+  onSnapshot,
+  query,
+  orderBy,
+  where,
+} from "firebase/firestore";
 
-const getCollection = (collectionName) => {
+const getCollection = (collectionName, queryConstraints) => {
   const documents = ref(null);
   const error = ref(null);
 
-  // register the Firestore collection reference with query and orderBy
-  const collectionRef = query(
-    collection(projectFirestore, collectionName),
-    orderBy("createdAt")
-  );
+  // Set up the Firestore collection reference with query and orderBy
+  let collectionRef = collection(projectFirestore, collectionName);
+
+  if (queryConstraints) {
+    // Apply the `where` constraint if `queryConstraints` is provided
+    collectionRef = query(
+      collectionRef,
+      where(...queryConstraints),
+      orderBy("createdAt")
+    );
+  } else {
+    // Use just the orderBy constraint if no `where` constraint is provided
+    collectionRef = query(collectionRef, orderBy("createdAt"));
+  }
 
   const unsub = onSnapshot(
     collectionRef,

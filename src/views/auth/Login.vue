@@ -27,7 +27,7 @@ export default {
       if (!error.value) {
         console.log("user logged in");
         // redirect to Login View
-        router.push({ name: "Home" });
+        router.push({ name: "UserPlaylists" });
       }
     };
 
